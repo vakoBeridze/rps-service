@@ -1,9 +1,6 @@
 package ge.vako.rps.game.markovchain;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * <br/><br/>
@@ -24,35 +21,37 @@ public class MarkovChain {
 
 	private void init(int movesToRemember) {
 		this.matrix = new HashMap<>();
-		List<String> matrixKeys = new ArrayList<>();
-		generateMoves(matrixKeys, "", movesToRemember * 2);
-		matrixKeys.forEach(key -> matrix.put(key, new MarkovPossibleMoves(gameMoves)));
+		List<String> matrixKeys = generateMoves("", movesToRemember * 2);
+		matrixKeys.forEach(this::generatePossibleMoves);
+	}
+
+	private void generatePossibleMoves(String key) {
+		matrix.put(key, new MarkovPossibleMoves(gameMoves));
 	}
 
 	public void updateMatrix(String lastMoves, Character newHumanMove) {
 		MarkovPossibleMoves possibleMoves = matrix.get(lastMoves);
 		possibleMoves.updateOccurrences(newHumanMove, adaptChangesPercentage);
-		possibleMoves.updateProbabilities();
 	}
 
 	public MarkovPossibleMoves getPredictions(String lastMoves) {
 		return matrix.get(lastMoves);
 	}
 
+	private List<String> generateMoves(String prefix, int keyLength) {
+		if (keyLength == 0) {
+			return Collections.singletonList(prefix);
+		}
+
+		List<String> matrixKeys = new ArrayList<>();
+		for (char possibleMove : gameMoves) {
+			List<String> generated = generateMoves(prefix + possibleMove, keyLength - 1);
+			matrixKeys.addAll(generated);
+		}
+		return matrixKeys;
+	}
 
 	public Map<String, MarkovPossibleMoves> getMatrix() {
 		return matrix;
-	}
-
-	private void generateMoves(List<String> matrixKeys, String prefix, int keyLength) {
-		if (keyLength == 0) {
-			matrixKeys.add(prefix);
-			return;
-		}
-
-		for (char possibleMove : gameMoves) {
-			String newPrefix = prefix + possibleMove;
-			generateMoves(matrixKeys, newPrefix, keyLength - 1);
-		}
 	}
 }

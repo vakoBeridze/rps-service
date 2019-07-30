@@ -94,7 +94,6 @@ public class RPSGameSession {
 		} else {
 			humanScore++;
 		}
-//        printWinner();
 	}
 
 	private PredictionResultModel generateRandomModel() {
@@ -126,19 +125,6 @@ public class RPSGameSession {
 		highestProbabilityOptional.ifPresent(highestProbability -> resultModel.setMoveToBeatHuman(beat(highestProbability.getMove())));
 
 		return resultModel;
-	}
-
-	public void printWinner() {
-		if (botScore + humanScore + tie == totalRounds) {
-			System.out.println("round: " + totalRounds);
-			System.out.println("bot = [" + botScore / (totalRounds - tie) + "], human = [" + humanScore / (totalRounds - tie) + "]");
-		} else throw new RuntimeException("WTF");
-	}
-
-	public void print() {
-
-		System.out.println("sessionHistory: " + sessionHistory.toString());
-//		markovChain.printState();
 	}
 
 	public BotThoughtsModel getBotThoughts() {

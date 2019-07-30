@@ -28,9 +28,10 @@ public class MarkovPossibleMoves {
 				moveMetaData.setOccurrences(moveMetaData.getOccurrences() + 1);
 			}
 		});
+		updateProbabilities();
 	}
 
-	public void updateProbabilities() {
+	private void updateProbabilities() {
 		// sum total occurrences
 		double totalOccurrences = moves.values().stream().mapToDouble(MoveMetaData::getOccurrences).sum();
 
