@@ -7,47 +7,54 @@ import static org.junit.Assert.assertEquals;
 
 public class MarkovChainTest {
 
-    private MarkovChain chain;
+	private static final double DELTA = 0.000000001;
+	private MarkovChain chain;
 
-    @Before
-    public void init() {
-        chain = new MarkovChain(new Character[]{'R', 'P', 'S'}, 1, 1);
-    }
+	@Before
+	public void init() {
+		chain = new MarkovChain(new Character[]{'R', 'P', 'S'}, 1, 1);
+	}
 
-    @Test
-    public void updateMatrixAndGetPredictions() {
-        MarkovPossibleMoves rr = chain.getPredictions("RR");
-        assertEquals(3, rr.getMoves().size());
-        assertEquals(1 / 3.0, rr.getMoves().get('R').getProbability(), 0.000000001);
-        assertEquals(1 / 3.0, rr.getMoves().get('P').getProbability(), 0.000000001);
-        assertEquals(1 / 3.0, rr.getMoves().get('S').getProbability(), 0.000000001);
+	@Test
+	public void updateMatrixAndGetPredictions() {
+		MarkovPossibleMoves rr = chain.getPredictions("RR");
+		System.out.println(rr);
+		assertEquals(3, rr.getMoves().size());
+		assertEquals(1 / 3.0, rr.getMoves().get('R').getProbability(), DELTA);
+		assertEquals(1 / 3.0, rr.getMoves().get('P').getProbability(), DELTA);
+		assertEquals(1 / 3.0, rr.getMoves().get('S').getProbability(), DELTA);
 
-        assertEquals(0, rr.getMoves().get('R').getOccurrences(), 0.000000001);
-        assertEquals(0, rr.getMoves().get('P').getOccurrences(), 0.000000001);
-        assertEquals(0, rr.getMoves().get('S').getOccurrences(), 0.000000001);
+		assertEquals(0, rr.getMoves().get('R').getOccurrences(), DELTA);
+		assertEquals(0, rr.getMoves().get('P').getOccurrences(), DELTA);
+		assertEquals(0, rr.getMoves().get('S').getOccurrences(), DELTA);
 
-        chain.updateMatrix("RR", 'S');
+		chain.updateMatrix("RR", 'S');
 
-        MarkovPossibleMoves afterOneMove = chain.getPredictions("RR");
-        assertEquals(3, afterOneMove.getMoves().size());
-        assertEquals(0, afterOneMove.getMoves().get('R').getProbability(), 0.000000001);
-        assertEquals(0, afterOneMove.getMoves().get('P').getProbability(), 0.000000001);
-        assertEquals(1, afterOneMove.getMoves().get('S').getProbability(), 0.000000001);
+		MarkovPossibleMoves afterOneMove = chain.getPredictions("RR");
+		assertEquals(3, afterOneMove.getMoves().size());
+		assertEquals(0, afterOneMove.getMoves().get('R').getProbability(), DELTA);
+		assertEquals(0, afterOneMove.getMoves().get('P').getProbability(), DELTA);
+		assertEquals(1, afterOneMove.getMoves().get('S').getProbability(), DELTA);
 
-        assertEquals(0, afterOneMove.getMoves().get('R').getOccurrences(), 0.000000001);
-        assertEquals(0, afterOneMove.getMoves().get('P').getOccurrences(), 0.000000001);
-        assertEquals(1, afterOneMove.getMoves().get('S').getOccurrences(), 0.000000001);
+		assertEquals(0, afterOneMove.getMoves().get('R').getOccurrences(), DELTA);
+		assertEquals(0, afterOneMove.getMoves().get('P').getOccurrences(), DELTA);
+		assertEquals(1, afterOneMove.getMoves().get('S').getOccurrences(), DELTA);
 
-        chain.updateMatrix("RR", 'P');
+		chain.updateMatrix("RR", 'P');
+		System.out.println(chain.toString());
 
-        MarkovPossibleMoves afterSecondMove = chain.getPredictions("RR");
-        assertEquals(3, afterSecondMove.getMoves().size());
-        assertEquals(0, afterSecondMove.getMoves().get('R').getProbability(), 0.000000001);
-        assertEquals(0.5, afterSecondMove.getMoves().get('P').getProbability(), 0.000000001);
-        assertEquals(0.5, afterSecondMove.getMoves().get('S').getProbability(), 0.000000001);
+		MarkovPossibleMoves afterSecondMove = chain.getPredictions("RR");
+		assertEquals(3, afterSecondMove.getMoves().size());
+		assertEquals(0, afterSecondMove.getMoves().get('R').getProbability(), DELTA);
+		assertEquals(0.5, afterSecondMove.getMoves().get('P').getProbability(), DELTA);
+		assertEquals(0.5, afterSecondMove.getMoves().get('S').getProbability(), DELTA);
 
-        assertEquals(0, afterSecondMove.getMoves().get('R').getOccurrences(), 0.000000001);
-        assertEquals(1, afterSecondMove.getMoves().get('P').getOccurrences(), 0.000000001);
-        assertEquals(1, afterSecondMove.getMoves().get('S').getOccurrences(), 0.000000001);
-    }
+		assertEquals(0, afterSecondMove.getMoves().get('R').getOccurrences(), DELTA);
+		assertEquals(1, afterSecondMove.getMoves().get('P').getOccurrences(), DELTA);
+		assertEquals(1, afterSecondMove.getMoves().get('S').getOccurrences(), DELTA);
+
+		System.out.println(afterSecondMove.getMoves().get('R').toString());
+		System.out.println(afterSecondMove.getMoves().get('P').toString());
+		System.out.println(afterSecondMove.getMoves().get('S').toString());
+	}
 }
